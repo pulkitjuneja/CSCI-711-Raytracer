@@ -1,6 +1,6 @@
 #include "Triangle.h"
 
-Triangle::Triangle(Vector3f v0, Vector3f v1, Vector3f v2)
+Triangle::Triangle(Vector3f v0, Vector3f v1, Vector3f v2, Material material) : Renderable(material)
 {
 	V0 = v0;
 	V1 = v1;
@@ -36,6 +36,8 @@ bool Triangle::intersects(Ray& ray, HitData& rec)
 
 	rec.t = t;
 	rec.normal = N;
+	rec.hitObject = this;
+	rec.hitPoint = ray.pointAtParameter(t);
 	return true;
 }
 

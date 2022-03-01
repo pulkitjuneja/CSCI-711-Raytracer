@@ -1,10 +1,17 @@
 #include "Scene.h"
 
-Scene::Scene(RenderOptions& options) : camera(createCamera(options)) {}
+Scene::Scene(RenderOptions& options) : camera(createCamera(options)) {
+    sceneAmbience = Vector3f(0.5, 0.7, 1.0);
+}
 
 void Scene::add(Renderable* object)
 {
     sceneObjects.push_back(object);
+}
+
+void Scene::addPointLight(Vector3f position, Vector3f color, float intensity)
+{
+    pointLights.push_back(PointLight(position, color, intensity));
 }
 
 Camera Scene::createCamera(RenderOptions& options)

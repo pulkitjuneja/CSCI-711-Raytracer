@@ -22,7 +22,7 @@ public:
 	Vector3<T> cross(Vector3<T> vec) const;
 	Vector3<T> operator*(const T& f) const;
 	Vector3<T> operator*(const Vector3<T>& v) const;
-	Vector3<T> operator+(const Vector3<T>& v);
+	Vector3<T> operator+(const Vector3<T>& v) const;
 	Vector3<T> operator-(const Vector3<T>& v) const;
 	Vector3<T> operator/(const T& f);
 	Vector3<T> operator-();
@@ -81,7 +81,7 @@ Vector3<T> Vector3<T>::operator*(const Vector3<T>& v) const
 }
 
 template <class T>
-Vector3<T> Vector3<T>::operator+(const Vector3<T>& v)
+Vector3<T> Vector3<T>::operator+(const Vector3<T>& v) const
 {
 	return Vector3<T>(x + v.x, y + v.y, z + v.z);
 }

@@ -14,11 +14,11 @@ Vector3f RayTracer::trace(Ray& ray, int depth)
     HitData rec;
     if (scene->intersects(ray, rec))
     {
-        return rec.normal;
+        return calculateLighting(rec);
     }
     else
     {
-        return Vector3f(0.5, 0.7, 1.0);
+        return scene->sceneAmbience;
     }
 }
 
@@ -81,6 +81,43 @@ void RayTracer::renderRow(RenderOptions* options, Vector3f* frameBuffer)
         //}
 
     } while (nextRow < options->height);
+}
+
+Vector3f RayTracer::calculateLighting(const HitData& record)
+{
+    Vector3f diffuseColor;
+    Vector3f specularColor;
+    Material& material = record.hitObject->material;
+
+    for(int i = 0; i<scene->pointLights.size(); i++) {
+        PointLight& pointLight = scene->pointLights[i];
+
+        Vector3f normal = record.normal;
+        Vector3f lightDir = pointLight.position - record.hitPoint;
+        lightDir.normalize();
+        Vector3f viewDir = scene->camera.getPosition() - record.hitPoint;
+        viewDir.normalize();
+        Vector3f halfway = lightDir + viewDir;
+        halfway.normalize();
+        float distance = (pointLight.position - record.hitPoint).length();
+
+        Vector3f shadowRayorig = record.hitPoint + (lightDir * 0.001);
+        Ray shadowRay(shadowRayorig, lightDir);
+        HitData shadowRec;
+
+        if (scene->intersects(shadowRay, shadowRec)) {
+            continue;
+        }
+        // calculate diffuse lighting 
+        float NdotL = max(normal.dot(lightDir), 0.0f);
+        float diffuse = pointLight.intensity * NdotL;
+        diffuseColor = diffuseColor + (material.diffuse * pointLight.color * diffuse * material.Kd);
+        //calculate specular highlight
+        float spec = pow(max(normal.dot(halfway), 0.0f), material.Ke);
+        specularColor = specularColor + (pointLight.color * pointLight.intensity * spec * material.Ks );
+    }
+
+    return diffuseColor + specularColor;
 }
 
 void RayTracer::setScene(Scene* scene)

@@ -14,7 +14,8 @@ public:
 	float radius;
 	Vector3f center;
 
-	Sphere(Vector3f pos, float rad) : center(pos), radius(rad) {}
+	Sphere(Vector3f pos, float rad, Material material) : center(pos), 
+		radius(rad), Renderable(material) {}
 	virtual bool intersects(Ray& ray, HitData& rec);
 	virtual void getSurfaceProperties(Vector3f& hitPoint, Vector3f& normal);
 };

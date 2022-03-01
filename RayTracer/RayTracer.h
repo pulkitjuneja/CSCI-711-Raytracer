@@ -5,6 +5,7 @@
 
 #include "Vector3.h"
 #include "global.h"
+#include "Ray.h"
 #include "RenderOptions.h"
 #include "Scene.h"
 #include <atomic>
@@ -31,6 +32,7 @@ protected:
 public:
 	void render(RenderOptions* options);
 	void renderRow(RenderOptions* options, Vector3f* frameBuffer);
+	Vector3f calculateLighting(const HitData& record);
 	void setScene(Scene* scene);
 	void writeToImgae(Vector3f* frameBuffer, RenderOptions* options);
 };

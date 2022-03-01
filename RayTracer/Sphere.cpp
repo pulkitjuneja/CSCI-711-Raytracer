@@ -12,7 +12,10 @@ bool Sphere::intersects(Ray& ray, HitData& rec)
 	float thc = sqrt(radius * radius - d2);
 	rec.t = tca - thc;
 	rec.hitObject = this;
+	rec.hitPoint = ray.pointAtParameter(rec.t);
 	rec.normal = (ray.pointAtParameter(rec.t) - center);
+	rec.normal.normalize();
+
 	return true;
 }
 

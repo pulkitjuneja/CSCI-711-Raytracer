@@ -14,7 +14,7 @@ public:
 	Vector3f V1;
 	Vector3f V2;
 
-	Triangle(Vector3f v0, Vector3f v1, Vector3f v2);
+	Triangle(Vector3f v0, Vector3f v1, Vector3f v2, Material material);
 	virtual bool intersects(Ray& ray, HitData& rec);
 	virtual void getSurfaceProperties(Vector3f& hitPoint, Vector3f& normal);
 };
