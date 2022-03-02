@@ -23,6 +23,7 @@ struct HitData
 {
     Vector3f hitPoint;
     Vector3f normal;
+    Vector3f tangent;
     Renderable* hitObject;
     float t;
     void calculateProperties(Ray& ray);

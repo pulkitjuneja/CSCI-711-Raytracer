@@ -10,6 +10,7 @@
 #include "Scene.h"
 #include <atomic>
 #include <thread>
+#include "IlluminationModel.h"
 
 #define PI 3.14159265
 
@@ -22,7 +23,10 @@ protected:
 	Scene* scene;
 	atomic<int> rowsRendered{ 0 };
 	atomic<int> nextRow{ 0 };
+
+	BlinnPhong blinnPhong;
 	Vector3f trace(Ray& ray, int depth);
+
 	template <typename T>
 	T clamp(const T& value, const T& low, const T& high)
 	{

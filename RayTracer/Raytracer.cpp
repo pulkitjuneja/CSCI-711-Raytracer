@@ -1,5 +1,6 @@
 #include "Raytracer.h"
 #include <mutex>
+#include "IlluminationModel.h"
 
 using namespace std;
 
@@ -49,7 +50,7 @@ void RayTracer::render(RenderOptions* options)
 void RayTracer::renderRow(RenderOptions* options, Vector3f* frameBuffer)
 {
     MAX_DEPTH = options->maxDepth;
-    int ns = 1;
+    int ns = 30;
     do
     {
         int j = nextRow++;
@@ -74,32 +75,25 @@ void RayTracer::renderRow(RenderOptions* options, Vector3f* frameBuffer)
         }
 
         ++rowsRendered;
-        //if (rowsRendered % 10 == 0)
-        //{
-        //    lock_guard<mutex> lock(coutMutex);
-        //    cout << rowsRendered << "/" << options->height << " rows rendered" << endl;
-        //}
+        if (rowsRendered % 10 == 0)
+        {
+            lock_guard<mutex> lock(coutMutex);
+            cout << rowsRendered << "/" << options->height << " rows rendered" << endl;
+        }
 
     } while (nextRow < options->height);
 }
 
 Vector3f RayTracer::calculateLighting(const HitData& record)
 {
-    Vector3f diffuseColor;
-    Vector3f specularColor;
+    Vector3f finalColor;
     Material& material = record.hitObject->material;
 
     for(int i = 0; i<scene->pointLights.size(); i++) {
         PointLight& pointLight = scene->pointLights[i];
 
-        Vector3f normal = record.normal;
         Vector3f lightDir = pointLight.position - record.hitPoint;
         lightDir.normalize();
-        Vector3f viewDir = scene->camera.getPosition() - record.hitPoint;
-        viewDir.normalize();
-        Vector3f halfway = lightDir + viewDir;
-        halfway.normalize();
-        float distance = (pointLight.position - record.hitPoint).length();
 
         Vector3f shadowRayorig = record.hitPoint + (lightDir * 0.001);
         Ray shadowRay(shadowRayorig, lightDir);
@@ -108,16 +102,11 @@ Vector3f RayTracer::calculateLighting(const HitData& record)
         if (scene->intersects(shadowRay, shadowRec)) {
             continue;
         }
-        // calculate diffuse lighting 
-        float NdotL = max(normal.dot(lightDir), 0.0f);
-        float diffuse = pointLight.intensity * NdotL;
-        diffuseColor = diffuseColor + (material.diffuse * pointLight.color * diffuse * material.Kd);
-        //calculate specular highlight
-        float spec = pow(max(normal.dot(halfway), 0.0f), material.Ke);
-        specularColor = specularColor + (pointLight.color * pointLight.intensity * spec * material.Ks );
+
+        finalColor = finalColor + blinnPhong.calculateLIghting(record, pointLight, material, scene->camera);
     }
 
-    return diffuseColor + specularColor;
+    return finalColor;
 }
 
 void RayTracer::setScene(Scene* scene)

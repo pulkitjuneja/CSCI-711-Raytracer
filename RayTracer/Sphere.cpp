@@ -15,6 +15,8 @@ bool Sphere::intersects(Ray& ray, HitData& rec)
 	rec.hitPoint = ray.pointAtParameter(rec.t);
 	rec.normal = (ray.pointAtParameter(rec.t) - center);
 	rec.normal.normalize();
+	rec.tangent = ray.direction.cross(rec.normal);
+	rec.tangent.normalize();
 
 	return true;
 }

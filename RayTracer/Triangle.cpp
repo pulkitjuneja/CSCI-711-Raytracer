@@ -38,6 +38,8 @@ bool Triangle::intersects(Ray& ray, HitData& rec)
 	rec.normal = N;
 	rec.hitObject = this;
 	rec.hitPoint = ray.pointAtParameter(t);
+	rec.tangent = e2;
+	rec.tangent.normalize();
 	return true;
 }
 

@@ -25,6 +25,7 @@ int main()
 	scene->add(new Sphere(Vector3f(6.2, 0.469, 2.73), 1, Material(Vector3f(0, 1, 0), 0.6f, 0.06f, 32)));
 	scene->add(new Triangle(Vector3f(2, -1, 0), Vector3f(2, -1, 4), Vector3f(10, -1, 0), Material(Vector3f(1, 1, 1), 0.6f, 0.06f, 64)));
 	scene->add(new Triangle(Vector3f(10, -1, 0), Vector3f(2, -1, 4), Vector3f(10, -1, 4), Material(Vector3f(1, 1, 1), 0.6f, 0.06f, 64)));
+
 	RayTracer tracer;
 	tracer.setScene(scene);
 	tracer.render(&options);
