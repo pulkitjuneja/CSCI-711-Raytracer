@@ -24,6 +24,7 @@ struct HitData
     Vector3f hitPoint;
     Vector3f normal;
     Vector3f tangent;
+    Vector3f texCoords;
     Renderable* hitObject;
     float t;
     void calculateProperties(Ray& ray);
