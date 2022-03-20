@@ -19,7 +19,8 @@ Vector3f BlinnPhong::calculateLIghting(const HitData& record, PointLight& pointL
     // calculate diffuse lighting 
     float NdotL = std::max(normal.dot(lightDir), 0.0f);
     float diffuse = pointLight.intensity * NdotL;
-    diffuseColor = diffuseColor + (record.texCoords* pointLight.color * diffuse * material.Kd);
+    diffuseColor = diffuseColor + (material.diffuse->value(record.texCoords.x, record.texCoords.y)* 
+        pointLight.color * diffuse * material.Kd);
     //calculate specular highlight
     float spec = pow(std::max(normal.dot(halfway), 0.0f), material.Ke);
     specularColor = specularColor + (pointLight.color * pointLight.intensity * spec * material.Ks);

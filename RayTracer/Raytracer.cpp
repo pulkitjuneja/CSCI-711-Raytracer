@@ -15,7 +15,7 @@ Vector3f RayTracer::trace(Ray& ray, int depth)
     HitData rec;
     if (scene->intersects(ray, rec))
     {
-        return rec.texCoords;
+        return calculateLighting(rec);
     }
     else
     {
@@ -50,7 +50,7 @@ void RayTracer::render(RenderOptions* options)
 void RayTracer::renderRow(RenderOptions* options, Vector3f* frameBuffer)
 {
     MAX_DEPTH = options->maxDepth;
-    int ns = 1;
+    int ns = 8;
     do
     {
         int j = nextRow++;

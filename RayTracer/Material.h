@@ -4,16 +4,17 @@
 #define MATERIAL_H
 
 #include "Vector3.h"
+#include "Texture.h"
 
 class Material {
 public:
-	Vector3f diffuse;
+	Texture* diffuse;
 	float Ks;
 	float Kd;
 	float Ka;
 	float Ke;
 
-	Material(Vector3f diffuse, float Ks, float Ka, float ke);
+	Material(Texture* texture, float Ks, float Ka, float ke);
 };
 
 #endif // !MATERIAL_H
