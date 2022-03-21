@@ -9,6 +9,7 @@
 class Texture {
 public:
 	virtual Vector3f value(float u, float v) = 0;
+	virtual ~Texture() = default;
 };
 
 class SolidTexture : public Texture {
@@ -26,6 +27,18 @@ class CheckeredTexture : public Texture {
 public:
 	CheckeredTexture(Vector3f color1, Vector3f color2, float boxSize);
 	virtual Vector3f value(float u, float v);
+};
+
+class ImageTexture : public Texture {
+	unsigned char* imageData;
+	int width;
+	int height;
+	int nrComponents;
+	int bytesPerScanline;
+public:
+	ImageTexture(std::string filename);
+	virtual Vector3f value(float u, float v);
+	virtual ~ImageTexture();
 };
 
 #endif // !TEXTURE_H

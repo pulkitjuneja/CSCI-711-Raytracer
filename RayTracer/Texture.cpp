@@ -1,5 +1,9 @@
 #include "Texture.h"
 #include <bitset>
+#include <algorithm>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 SolidTexture::SolidTexture(Vector3f color)
 {
@@ -36,4 +40,38 @@ Vector3f CheckeredTexture::value(float u, float v)
 	}
 
 	return color2;
+}
+
+ImageTexture::ImageTexture(std::string filename)
+{
+	imageData = stbi_load(filename.c_str(), &width, &height, &nrComponents, nrComponents);
+	if (!imageData) {
+		std::cerr << "ERROR: Could not load texture image file '" << filename << "'.\n";
+		width = height = 0;
+	}
+
+	bytesPerScanline = nrComponents * width;
+}
+
+Vector3f ImageTexture::value(float u, float v)
+{
+	if (imageData == nullptr) {
+		return Vector3f(0, 1, 1);
+	}
+
+	u = std::clamp(u, 0.0f, 1.0f);
+	v = 1.0 - std::clamp(v, 0.0f, 1.0f);  // Flip V to image coordinates
+
+	auto i = static_cast<int>(u * width);
+	auto j = static_cast<int>(v * height);
+
+	const auto colorScale = 1.0 / 255.0;
+	auto pixel = imageData + j * bytesPerScanline + i * nrComponents;
+
+	return Vector3f(colorScale * pixel[0], colorScale * pixel[1], colorScale * pixel[2]);
+}
+
+ImageTexture::~ImageTexture()
+{
+	delete imageData;
 }
