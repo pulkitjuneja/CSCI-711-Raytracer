@@ -20,6 +20,12 @@ CheckeredTexture::CheckeredTexture(Vector3f color1, Vector3f color2, float boxRe
 
 Vector3f CheckeredTexture::value(float u, float v)
 {
+	//float noise = perlin.ValueNoise_2D(u * 16, v * 16);
+
+	//std::bitset<2> checkBits;
+	//checkBits.set(0, ((int)floor((u + noise) * boxResolution)) % 2 == 0);
+	//checkBits.set(1, ((int)floor((v + noise) * boxResolution)) % 2 == 0);
+
 	std::bitset<2> checkBits;
 	checkBits.set(0, ((int)floor(u * boxResolution)) % 2 == 0);
 	checkBits.set(1, ((int)floor(v * boxResolution)) % 2 == 0);

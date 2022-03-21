@@ -57,6 +57,9 @@
     <ClInclude Include="Texture.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Perlin.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">

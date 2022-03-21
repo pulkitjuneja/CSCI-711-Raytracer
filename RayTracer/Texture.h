@@ -4,6 +4,7 @@
 #define TEXTURE_H
 
 #include "Vector3.h"
+#include "Perlin.h"
 
 class Texture {
 public:
@@ -19,6 +20,7 @@ public:
 
 class CheckeredTexture : public Texture {
 	float boxResolution;
+	PerlinNoise perlin;
 	Vector3f color1;
 	Vector3f color2;
 public:
