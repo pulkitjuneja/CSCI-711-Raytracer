@@ -11,10 +11,10 @@ public:
 	Texture* diffuse;
 	float Ks;
 	float Kd;
-	float Ka;
+	float Kr;
 	float Ke;
 
-	Material(Texture* texture, float Ks, float Ka, float ke);
+	Material(Texture* texture, float Ks, float Kr, float ke);
 };
 
 #endif // !MATERIAL_H

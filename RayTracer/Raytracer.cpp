@@ -3,7 +3,6 @@
 #include "IlluminationModel.h"
 
 using namespace std;
-
 static mutex coutMutex;
 
 Vector3f RayTracer::trace(Ray& ray, int depth)
@@ -15,12 +14,30 @@ Vector3f RayTracer::trace(Ray& ray, int depth)
     HitData rec;
     if (scene->intersects(ray, rec))
     {
-        return calculateLighting(rec);
+        Vector3f localIllumination = calculateLighting(rec);
+        Vector3f finalIllumniation = localIllumination;
+        if (depth < MAX_DEPTH) {
+            if (rec.hitObject->material.Kr > 0) {
+                Vector3f viewDir = scene->camera.getPosition() - rec.hitPoint;
+                viewDir.normalize();
+                Vector3f reflectionDir = reflect(viewDir, rec.normal);
+                Ray reflectionRay(rec.hitPoint + rec.normal * 0.001, reflectionDir);
+                finalIllumniation = finalIllumniation + trace(reflectionRay, depth + 1) * rec.hitObject->material.Kr;
+            }
+        }
+        return finalIllumniation;
     }
     else
     {
         return scene->sceneAmbience;
     }
+}
+
+Vector3f RayTracer::reflect(Vector3f& S, Vector3f& N)
+{
+    float D = S.dot(N);
+    Vector3f ref = (N * 2 * D) - S;
+    return ref;
 }
 
 void RayTracer::render(RenderOptions* options)
@@ -50,7 +67,7 @@ void RayTracer::render(RenderOptions* options)
 void RayTracer::renderRow(RenderOptions* options, Vector3f* frameBuffer)
 {
     MAX_DEPTH = options->maxDepth;
-    int ns = 8;
+    int ns = 1;
     do
     {
         int j = nextRow++;

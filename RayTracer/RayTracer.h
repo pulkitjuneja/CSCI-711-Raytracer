@@ -26,6 +26,7 @@ protected:
 
 	BlinnPhong blinnPhong;
 	Vector3f trace(Ray& ray, int depth);
+	Vector3f reflect(Vector3f& S, Vector3f& N);
 
 	template <typename T>
 	T clamp(const T& value, const T& low, const T& high)
