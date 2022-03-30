@@ -6,22 +6,22 @@ Engine::Engine(RenderOptions options): options(options), scene(options){}
 
 void Engine::init()
 {
-	scene.camera.setPositionAndRotation(Vector3f(4.91, 1.13, 5.907), Vector3f(0, 0, -1));
-	scene.addPointLight(Vector3f(4.5, 2.5, 6), Vector3f(1, 1, 1), 1.0f);
+	scene.camera.setPositionAndRotation(glm::vec3(4.91, 1.13, 5.907), glm::vec3(0, 0, -1));
+	scene.addPointLight(glm::vec3(4.5, 2.5, 6), glm::vec3(1, 1, 1), 1.0f);
 
-	Vertex v1(Vector3f(2, -1, 3.8), Vector3f(0, 0, 0));
-	Vertex v2(Vector3f(10, -1, 3.8), Vector3f(1, 0, 0));
-	Vertex v3(Vector3f(2, -1, -1), Vector3f(0, 1, 0));
-	Vertex v4(Vector3f(10, -1, -1), Vector3f(1, 1, 0));
+	Vertex v1(glm::vec3(2, -1, 4.8), glm::vec3(0, 0, 0));
+	Vertex v2(glm::vec3(10, -1, 4.8), glm::vec3(1, 0, 0));
+	Vertex v3(glm::vec3(2, -1, -1), glm::vec3(0, 1, 0));
+	Vertex v4(glm::vec3(10, -1, -1), glm::vec3(1, 1, 0));
 
-	Texture* redTexture = new SolidTexture(Vector3f(1, 0, 0));
-	Texture* greenTexture = new SolidTexture(Vector3f(0, 1, 0));
-	Texture* CheckTexture = new CheckeredTexture(Vector3f(1, 0, 0), Vector3f(1, 1, 0), 32);
+	Texture* redTexture = new SolidTexture(glm::vec3(1, 0, 0));
+	Texture* greenTexture = new SolidTexture(glm::vec3(0, 1, 0));
+	Texture* CheckTexture = new CheckeredTexture(glm::vec3(1, 0, 0), glm::vec3(1, 1, 0), 32);
 
-	//scene.add(new Sphere(Vector3f(4.4, 1.1f, 3.907), 1, Material(redTexture, 0.6f, 0.0f, 64)));
-	scene.add(new Sphere(Vector3f(6.2, 0.469, 2.73), 1, Material(greenTexture, 0.6f, 1.0f, 32)));
-	scene.add(new Triangle(v1, v2, v3, Material(CheckTexture, 0.6f, 0.01f, 64)));
-	scene.add(new Triangle(v3, v2, v4, Material(CheckTexture, 0.6f, 0.01f, 64)));
+	scene.add(new Sphere(glm::vec3(4.4, 1.1f, 3.907), 1, Material(redTexture, 0.1f, 0.7f, 32)));
+	scene.add(new Sphere(glm::vec3(6.2, 0.469, 2.73), 1, Material(greenTexture, 0.8f, 1.0f, 512)));
+	scene.add(new Triangle(v1, v2, v3, Material(CheckTexture, 0.2f, 0.4f, 32)));
+	scene.add(new Triangle(v3, v2, v4, Material(CheckTexture, 0.2f, 0.4f, 32)));
 }
 
 void Engine::release()

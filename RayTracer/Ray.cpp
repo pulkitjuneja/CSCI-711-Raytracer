@@ -1,9 +1,9 @@
 #include "Ray.h"
 #include "Renderable.h"
 
-Vector3f Ray::pointAtParameter(float t)
+glm::vec3 Ray::pointAtParameter(float t)
 {
-	return position + direction * t;
+	return position + (direction * t);
 }
 
 void HitData::calculateProperties(Ray& ray)

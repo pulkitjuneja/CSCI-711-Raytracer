@@ -5,6 +5,7 @@
 
 #include "Global.h"
 #include <math.h>
+#include <glm.hpp>
 
 template <class T>
 class Vector3
@@ -14,6 +15,7 @@ public:
 
 	Vector3() : x(0), y(0), z(0) {}
 	Vector3(T x, T y, T z) : x(x), y(y), z(z) {}
+	Vector3(glm::vec3& i) : x(i.x), y(i.y), z(i.z) {}
 	float lengthSquared() const;
 	float length() const;
 	Vector3(const Vector3& c);

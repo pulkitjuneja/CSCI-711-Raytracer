@@ -3,28 +3,28 @@
 #ifndef RAY_H
 #define RAY_H
 
-#include "Vector3.h"
+#include <glm.hpp>
 
 class Ray {
 public:
-    Vector3f position;
-    Vector3f direction;
+    glm::vec3 position;
+    glm::vec3 direction;
 
-    Ray() : position(Vector3f(0, 0, 0)), direction(Vector3f(0, 0, 0)) {};
-    Ray(Vector3f position, Vector3f direction) : position(position),
+    Ray() : position(glm::vec3(0, 0, 0)), direction(glm::vec3(0, 0, 0)) {};
+    Ray(glm::vec3 position, glm::vec3 direction) : position(position),
         direction(direction) {};
 
-    Vector3f pointAtParameter(float t);
+    glm::vec3 pointAtParameter(float t);
 };
 
 class Renderable;
 
 struct HitData
 {
-    Vector3f hitPoint;
-    Vector3f normal;
-    Vector3f tangent;
-    Vector3f texCoords;
+    glm::vec3 hitPoint;
+    glm::vec3 normal;
+    glm::vec3 tangent;
+    glm::vec3 texCoords;
     Renderable* hitObject;
     float t;
     void calculateProperties(Ray& ray);

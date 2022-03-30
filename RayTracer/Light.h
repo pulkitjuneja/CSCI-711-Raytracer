@@ -3,17 +3,17 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
-#include "Vector3.h" 
+#include <glm.hpp>
 
 struct Light {
-	Vector3f color;
+	glm::vec3 color;
 	float intensity;
 };
 
 struct PointLight : Light {
-	Vector3f position;
+	glm::vec3 position;
 
-	PointLight(Vector3f position, Vector3f color, float intensity) {
+	PointLight(glm::vec3 position, glm::vec3 color, float intensity) {
 		this->position = position;
 		this->intensity = intensity;
 		this->color = color;

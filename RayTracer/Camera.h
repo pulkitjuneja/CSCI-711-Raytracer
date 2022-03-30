@@ -5,22 +5,23 @@
 
 #include "Vector3.h"
 #include "Ray.h"
+#include <glm.hpp>
 
 class Camera
 {
-    Vector3f origin;
-    Vector3f lowerLeftCorner;
+    glm::vec3 origin;
+    glm::vec3 lowerLeftCorner;
     float width;
     float height;
-    Vector3f horizontal;
-    Vector3f vertical;
+    glm::vec3 horizontal;
+    glm::vec3 vertical;
 
 public:
     Camera(float fov, float aspect);
     Ray getCameraRay(float x, float y);
     // keepin gthis a seperate function so user can move the camera as and when required
-    void setPositionAndRotation(Vector3f worldPosition, Vector3f target);
-    Vector3f getPosition() { return origin; }
+    void setPositionAndRotation(glm::vec3 worldPosition, glm::vec3 target);
+    glm::vec3 getPosition() { return origin; }
 };
 
 #endif

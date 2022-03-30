@@ -19,12 +19,12 @@ public:
 	vector<Renderable*> sceneObjects;
 	vector<PointLight> pointLights;
 	Camera camera;
-	Vector3f sceneAmbience;
+	glm::vec3 sceneAmbience;
 
 	Scene(RenderOptions& options);
 
 	void add(Renderable* object);
-	void addPointLight(Vector3f position, Vector3f color, float intensity);
+	void addPointLight(glm::vec3 position, glm::vec3 color, float intensity);
 
 	Camera createCamera(RenderOptions& options);
 	void setCamera(Camera camera);

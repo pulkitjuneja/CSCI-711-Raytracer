@@ -3,7 +3,7 @@
 #ifndef RAYTRACER_H
 #define RAYTRACER_H
 
-#include "Vector3.h"
+#include <glm.hpp>
 #include "global.h"
 #include "Ray.h"
 #include "RenderOptions.h"
@@ -25,8 +25,8 @@ protected:
 	atomic<int> nextRow{ 0 };
 
 	BlinnPhong blinnPhong;
-	Vector3f trace(Ray& ray, int depth);
-	Vector3f reflect(Vector3f& S, Vector3f& N);
+	glm::vec3 trace(Ray& ray, int depth);
+	glm::vec3 reflect(glm::vec3& S, glm::vec3& N);
 
 	template <typename T>
 	T clamp(const T& value, const T& low, const T& high)
@@ -36,10 +36,10 @@ protected:
 
 public:
 	void render(RenderOptions* options);
-	void renderRow(RenderOptions* options, Vector3f* frameBuffer);
-	Vector3f calculateLighting(const HitData& record);
+	void renderRow(RenderOptions* options, glm::vec3* frameBuffer);
+	glm::vec3 calculateLighting(const HitData& record);
 	void setScene(Scene* scene);
-	void writeToImgae(Vector3f* frameBuffer, RenderOptions* options);
+	void writeToImgae(glm::vec3* frameBuffer, RenderOptions* options);
 };
 
 #endif

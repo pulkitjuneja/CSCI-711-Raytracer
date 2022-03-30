@@ -4,17 +4,17 @@
 #define TRIANGLE_H
 
 #include "Global.h"
-#include "Vector3.h"
+#include <glm.hpp>
 #include "Renderable.h"
 #include "Ray.h"
 
 struct Vertex {
-	Vector3f position;
+	glm::vec3 position;
 	// replace this with Vector 2 
-	Vector3f texCoords;
+	glm::vec3 texCoords;
 
 	Vertex() = default;
-	Vertex(Vector3f position, Vector3f texCoords);
+	Vertex(glm::vec3 position, glm::vec3 texCoords);
 };
 
 class Triangle : public Renderable {
@@ -25,7 +25,7 @@ public:
 
 	Triangle(Vertex v0, Vertex v1, Vertex v2, Material material);
 	virtual bool intersects(Ray& ray, HitData& rec);
-	virtual void getSurfaceProperties(Vector3f& hitPoint, Vector3f& normal);
+	virtual void getSurfaceProperties(glm::vec3& hitPoint, glm::vec3& normal);
 };
 
 #endif // !TRIANGLE_H

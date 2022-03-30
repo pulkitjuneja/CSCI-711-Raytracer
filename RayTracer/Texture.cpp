@@ -1,28 +1,29 @@
 #include "Texture.h"
 #include <bitset>
 #include <algorithm>
+#include <iostream>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-SolidTexture::SolidTexture(Vector3f color)
+SolidTexture::SolidTexture(glm::vec3 color)
 {
 	this->color = color;
 }
 
-Vector3f SolidTexture::value(float u, float v)
+glm::vec3 SolidTexture::value(float u, float v)
 {
 	return color;
 }
 
-CheckeredTexture::CheckeredTexture(Vector3f color1, Vector3f color2, float boxResolution)
+CheckeredTexture::CheckeredTexture(glm::vec3 color1, glm::vec3 color2, float boxResolution)
 {
 	this->color1 = color1;
 	this->color2 = color2;
 	this->boxResolution = boxResolution;
 }
 
-Vector3f CheckeredTexture::value(float u, float v)
+glm::vec3 CheckeredTexture::value(float u, float v)
 {
 	//float noise = perlin.ValueNoise_2D(u * 16, v * 16);
 
@@ -46,17 +47,17 @@ ImageTexture::ImageTexture(std::string filename)
 {
 	imageData = stbi_load(filename.c_str(), &width, &height, &nrComponents, nrComponents);
 	if (!imageData) {
-		std::cerr << "ERROR: Could not load texture image file '" << filename << "'.\n";
+		std::cout << "ERROR: Could not load texture image file '" << filename << "'.\n";
 		width = height = 0;
 	}
 
 	bytesPerScanline = nrComponents * width;
 }
 
-Vector3f ImageTexture::value(float u, float v)
+glm::vec3 ImageTexture::value(float u, float v)
 {
 	if (imageData == nullptr) {
-		return Vector3f(0, 1, 1);
+		return glm::vec3(0, 1, 1);
 	}
 
 	u = std::clamp(u, 0.0f, 1.0f);
@@ -68,7 +69,7 @@ Vector3f ImageTexture::value(float u, float v)
 	const auto colorScale = 1.0 / 255.0;
 	auto pixel = imageData + j * bytesPerScanline + i * nrComponents;
 
-	return Vector3f(colorScale * pixel[0], colorScale * pixel[1], colorScale * pixel[2]);
+	return glm::vec3(colorScale * pixel[0], colorScale * pixel[1], colorScale * pixel[2]);
 }
 
 ImageTexture::~ImageTexture()
