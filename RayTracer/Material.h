@@ -12,9 +12,11 @@ public:
 	float Ks;
 	float Kd;
 	float Kr;
+	float refractiveIndex;
+	float Kt;
 	float Ke;
 
-	Material(Texture* texture, float Ks, float Kr, float ke);
+	Material(Texture* texture, float Ks, float Kr, float Kt, float ke);
 };
 
 #endif // !MATERIAL_H

@@ -10,7 +10,7 @@ int main()
 	options.height = 720;
 	options.width = 1280;
 	options.fov = 90;
-	options.maxDepth = 3;
+	options.maxDepth = 20;
 	options.aspectRatio = (float)options.width / (float)options.height; 
 	Engine engine(options);
 	engine.run();
