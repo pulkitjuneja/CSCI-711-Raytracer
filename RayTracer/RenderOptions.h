@@ -3,6 +3,13 @@
 
 #include "Vector3.cpp"
 
+
+enum class ToneMappingOperator {
+	Reinhard,
+	Ward,
+	ALM
+};
+
 class RenderOptions
 {
 public:
@@ -11,6 +18,7 @@ public:
 	float aspectRatio;
 	float fov;
 	int maxDepth;
+	ToneMappingOperator toneMappingOperator;
 };
 
 #endif

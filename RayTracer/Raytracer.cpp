@@ -77,7 +77,7 @@ glm::vec3 RayTracer::trace(Ray& ray, int depth)
     }
     else
     {
-        return glm::vec3(0.5, 0.7, 1.0) * (ray.direction.y * 0.5f + 0.5f);
+        return glm::vec3(1.0, 1.0, 1.0)  * (ray.direction.y * 0.5f + 0.5f);
     }
 }
 
@@ -100,6 +100,64 @@ bool RayTracer::refract(const glm::vec3 direction, const glm::vec3 normal, float
     return true;
 }
 
+float RayTracer::calculateLogAverageLuminance(float* luminanceBuffer, int width, int height)
+{
+    double logAverage = 0;
+    double delta = 0.00001;
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            logAverage += log10(luminanceBuffer[i * width + j] + delta);
+        }
+    }
+    logAverage = logAverage / ((float)(width * height));
+    logAverage = exp(logAverage);
+    return logAverage;
+}
+
+void RayTracer::applyReinhard(float logAverageLuminance, int width, int height, glm::vec3* frameBuffer)
+{
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            glm::vec3 temp = frameBuffer[i * width + j];
+            temp = temp * (0.18f / logAverageLuminance);
+            glm::vec3 newValue(temp.x / (1 + temp.x), temp.y / (1 + temp.y), temp.z / (1 + temp.z));
+            frameBuffer[i * width + j] = newValue * maxLuminance;
+        }
+    }
+}
+
+void RayTracer::applyWard(float logAverageLuminance, int width, int height, glm::vec3* frameBuffer)
+{
+    float top = 1.219 + pow((maxLuminance / 2), 0.4);
+    float bottom = 1.219 + pow(logAverageLuminance, 0.4);
+    float sf = pow((top / bottom), 2.5);
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            frameBuffer[i * width + j] = frameBuffer[i * width + j] * sf;
+        }
+    }
+
+}
+
+void RayTracer::applyAdaptiveLogMapping(float logAverageLuminance, int width, int height, glm::vec3* frameBuffer, float* luminanceBuffer)
+{
+    float scaledMaxLuminance = maxLuminance / logAverageLuminance;
+    float exponent = log(0.75) / log(0.5);
+    float denom1 = log10(scaledMaxLuminance + 1);
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            float scaledPixelLuminance = luminanceBuffer[i * width + j] / logAverageLuminance;
+            float num2 = log(scaledPixelLuminance + 1);
+            float luminanceRatio = scaledPixelLuminance / scaledMaxLuminance;
+            float denom2 = log(2 + ((pow(luminanceRatio, exponent) * 8)));
+
+            float Ld = (1 / denom1) * (num2 / denom2);
+            frameBuffer[i * width + j] = frameBuffer[i * width + j] * (Ld);
+        }
+    }
+}
+
 void RayTracer::render(RenderOptions* options)
 {
     unsigned int numThreads = thread::hardware_concurrency();
@@ -109,6 +167,8 @@ void RayTracer::render(RenderOptions* options)
     cout << numThreads;
 
     glm::vec3* frameBuffer = new glm::vec3[options->height * options->width];
+    luminanceBuffer = new float[options->height * options->width];
+    maxLuminance = -1; 
 
     while (threadIndex < numThreads && threadIndex < options->height)
     {
@@ -118,7 +178,19 @@ void RayTracer::render(RenderOptions* options)
 
     for (auto& worker : threads)
     {
-        worker.join();
+        worker.join();  
+    }
+
+    float logAverageLuminance = calculateLogAverageLuminance(luminanceBuffer, options->width, options->height);
+
+    if (options->toneMappingOperator == ToneMappingOperator::Reinhard) {
+        applyReinhard(logAverageLuminance, options->width, options->height, frameBuffer);
+    }
+    else if (options->toneMappingOperator == ToneMappingOperator::Ward) {
+        applyWard(logAverageLuminance, options->width, options->height, frameBuffer);
+    }
+    else if (options->toneMappingOperator == ToneMappingOperator::ALM) {
+        applyAdaptiveLogMapping(logAverageLuminance, options->width, options->height, frameBuffer, luminanceBuffer);
     }
 
     writeToImgae(frameBuffer, options);
@@ -148,7 +220,12 @@ void RayTracer::renderRow(RenderOptions* options, glm::vec3* frameBuffer)
             }
             color = color / float(ns);
             color = glm::vec3(sqrt(color.x), sqrt(color.y), sqrt(color.z));
-            frameBuffer[startIndex++] = color;
+            frameBuffer[startIndex] = color;
+            luminanceBuffer[startIndex] = (0.27 * color.x) + (0.67 * color.y) + (0.06 * color.z);
+            if (luminanceBuffer[startIndex] > maxLuminance) {
+                maxLuminance = luminanceBuffer[startIndex];
+            }
+            startIndex++;
         }
 
         ++rowsRendered;

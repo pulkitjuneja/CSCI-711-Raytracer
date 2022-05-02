@@ -23,11 +23,20 @@ protected:
 	Scene* scene;
 	atomic<int> rowsRendered{ 0 };
 	atomic<int> nextRow{ 0 };
+	float* luminanceBuffer;
 
 	BlinnPhong blinnPhong;
 	glm::vec3 trace(Ray& ray, int depth);
 	glm::vec3 reflect(glm::vec3& S, glm::vec3& N);
 	bool refract(const glm::vec3 direction, const glm::vec3 normal, float niOverNt, glm::vec3& refracted);
+
+	//Tonemapping functions move to a different class
+	float maxLuminance;
+	float calculateLogAverageLuminance(float* luminanceBuffer, int width, int height);
+	void applyReinhard(float logAverageLuminance, int width, int height, glm::vec3* frameBuffer);
+	void applyWard(float logAverageLuminance, int width, int height, glm::vec3* frameBuffer);
+	void applyAdaptiveLogMapping(float logAverageLuminance, int width, int height, glm::vec3* frameBuffer, float* luminanceBuffer);
+
 
 	template <typename T>
 	T clamp(const T& value, const T& low, const T& high)
