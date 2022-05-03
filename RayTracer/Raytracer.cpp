@@ -143,7 +143,7 @@ void RayTracer::applyWard(float logAverageLuminance, int width, int height, glm:
 void RayTracer::applyAdaptiveLogMapping(float logAverageLuminance, int width, int height, glm::vec3* frameBuffer, float* luminanceBuffer)
 {
     float scaledMaxLuminance = maxLuminance / logAverageLuminance;
-    float exponent = log(0.75) / log(0.5);
+    float exponent = log(0.85) / log(0.5);
     float denom1 = log10(scaledMaxLuminance + 1);
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
